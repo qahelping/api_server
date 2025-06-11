@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "username": "testuser1",
+    "password": "P@ssw0rd1!",
+    "email": "alex.smith1@example.com",
+    "photo_filename": null,
+    "created_at": "2023-05-22 15:30:45",
+    "updated_at": "2023-05-22 15:30:45",
+    "is_active": true,
+    "last_login": null
+  },
+  {
+    "id": 2,
+    "username": "testuser2",
+    "password": "P@ssw0rd2!",
+    "email": "jordan.johnson2@test.org",
+    "photo_filename": null,
+    "created_at": "2023-05-23 15:30:45",
+    "updated_at": "2023-05-23 15:30:45",
+    "is_active": true,
+    "last_login": null
+  },
+  {
+    "id": 3,
+    "username": "testuser3",
+    "password": "P@ssw0rd3!",
+    "email": "taylor.williams3@demo.net",
+    "photo_filename": "user_3.jpg",
+    "created_at": "2023-05-24 15:30:45",
+    "updated_at": "2023-05-24 15:30:45",
+    "is_active": true,
+    "last_login": "2023-05-24 13:30:45"
+  },
+  {
+    "id": 4,
+    "username": "testuser4",
+    "password": "P@ssw0rd4!",
+    "email": "casey.brown4@sample.io",
+    "photo_filename": null,
+    "created_at": "2023-05-25 15:30:45",
+    "updated_at": "2023-05-25 15:30:45",
+    "is_active": true,
+    "last_login": null
+  },
+  {
+    "id": 5,
+    "username": "testuser5",
+    "password": "P@ssw0rd5!",
+    "email": "morgan.jones5@example.com",
+    "photo_filename": null,
+    "created_at": "2023-05-26 15:30:45",
+    "updated_at": "2023-05-26 15:30:45",
+    "is_active": false,
+    "last_login": null
+  }
+  # ... и еще 15 пользователей
+]
