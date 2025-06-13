@@ -14,15 +14,17 @@
 ## Установка
 
 1. Клонируйте репозиторий:
+
 ```bash
 git clone https://github.com/yourusername/trello-like-api.git
 cd trello-like-api
 ```
 
-2. Запуск проекта 
+2. Запуск проекта
+
 ```bash
 uvicorn app.main:app --reload --port 8001
 ```
 
 3. Swagger
-http://127.0.0.1:8001/docs 
+   http://127.0.0.1:8001/docs 
