@@ -158,15 +158,15 @@ def delete_board(board_id: int,
 
 
 @router.patch("/boards/{board_id}", response_model=schemas.BoardOut)
-def update_board(board_id: int, board_data: schemas.BoardUpdate, db: Session = Depends(database.get_db)):
+def update_board(board_id: int, board_data: schemas.BoardBase, db: Session = Depends(database.get_db)):
     # Проверяем, что доска существует
     board = crud.get_board(db, board_id)
     if not board:
         raise HTTPException(status_code=404, detail="Board not found")
 
     # Проверяем, что новое имя не конфликтует с существующими досками
-    if board_data.name:
-        existing_board = crud.get_board_by_name(db, board_data.name)
+    if board_data.title:
+        existing_board = crud.get_board_by_name(db, board_data.title)
         if existing_board and existing_board.id != board_id:
             raise HTTPException(status_code=400, detail="Board with this name already exists")
 
@@ -237,15 +237,15 @@ def remove_user(board_id: int, data: schemas.BoardUserModify,
 
 
 @router.post("/boards", response_model=schemas.BoardOut)
-def create_board(board_data: schemas.Board,
+def create_board(board_data: schemas.BoardBase,
                  current_user: models.User = Depends(auth.get_current_user),
                  db: Session = Depends(database.get_db)):
     # Проверяем, что доска с таким именем не существует
-    existing_board = crud.get_board_by_name(db, board_data.name)
+    existing_board = crud.get_board_by_name(db, board_data.title)
     if existing_board:
         raise HTTPException(status_code=400, detail="Board with this name already exists")
 
-    return crud.create_board(db, board_data.name)
+    return crud.create_board(db, board_data)
 
 
 @router.get("/boards/{board_id}", response_model=schemas.BoardOut)
@@ -382,7 +382,7 @@ def get_user_by_id(user_id: int, db: Session = Depends(database.get_db)):
 @router.patch("/users/{user_id}", response_model=schemas.UserOut)
 def update_user(
     user_id: int,
-    user_update: schemas.UserUpdate,  # Сделай отдельную схему для обновления
+    user_update: schemas.UserCreate,  # Сделай отдельную схему для обновления
     current_user: models.User = Depends(auth.get_current_user),
     db: Session = Depends(database.get_db)
 ):
@@ -472,3 +472,26 @@ def delete_pdf(task_id: int, db: Session = Depends(database.get_db)):
     crud.remove_task_pdf(db, task_id)
 
     return JSONResponse(content={"message": "PDF deleted successfully"})
+
+@router.put("/tasks/{task_id}/close")
+def close_task(db: Session, task_id: int, user_id: int) -> models.Task:
+    # Получаем задачу
+    task = db.query(models.Task).filter(models.Task.id == task_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    # Получаем пользователя
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Обновляем статус задачи
+    task.status = "Done"
+    task.updated_at = datetime.utcnow()
+
+    # Увеличиваем счетчик закрытых задач у пользователя
+    user.closed_tasks_count += 1
+
+    db.commit()
+    db.refresh(task)
+    return task

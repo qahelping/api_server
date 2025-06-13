@@ -98,7 +98,7 @@ def remove_task_pdf(db: Session, task_id: int):
     return update_task(db, task_id, {"pdf_path": None})
 
 
-def create_board(db: Session, board: schemas.BoardCreate):
+def create_board(db: Session, board: schemas.BoardBase):
     db_board = models.Board(title=board.title)
     db.add(db_board)
     db.commit()
@@ -169,3 +169,4 @@ def remove_task_from_board(db: Session, board_id: int, task_id: int):
         db.refresh(board)
         return board
     return None
+

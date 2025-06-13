@@ -49,14 +49,14 @@ class TaskOut(BaseModel):
     id: int
     title: str
     description: str
-    priority: str
     status: str
     created_at: datetime
-    responsible_id: int
+    updated_at: datetime
     creator_id: int
+    responsible_id: Optional[int]
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class AssignResponsibleRequest(BaseModel):
@@ -66,14 +66,6 @@ class AssignResponsibleRequest(BaseModel):
 # --- Доски ---
 class BoardBase(BaseModel):
     title: str
-
-
-class BoardCreate(BoardBase):
-    pass
-
-
-class BoardUpdate(BaseModel):
-    title: Optional[str] = None
 
 
 class BoardOut(BoardBase):
