@@ -10,6 +10,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
+    avatar_url = Column(String, nullable=True)
 
     created_tasks = relationship("Task", back_populates="creator", foreign_keys="Task.creator_id")
     responsible_tasks = relationship("Task", back_populates="responsible", foreign_keys="Task.responsible_id")
@@ -25,6 +26,7 @@ class Task(Base):
     priority = Column(String)
     status = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
+    pdf_path = Column(String, nullable=True)
 
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     responsible_id = Column(Integer, ForeignKey("users.id"), nullable=True)
