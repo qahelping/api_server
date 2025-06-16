@@ -6,7 +6,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-
+RUN apt-get update && apt-get install -y sqlite3
 # Устанавливаем uvicorn (если его нет в requirements.txt)
 RUN pip install uvicorn
 

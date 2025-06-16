@@ -27,6 +27,7 @@ uvicorn app.main:app --reload --port 8001
 
 docker build -t my-app . --no-cache
 docker run -d -p 8001:8001 --name my-app \-v $(pwd):/app \ app
+docker logs -f my-app
 
 ```
 
