@@ -708,13 +708,13 @@ def login():
     # Создаем access и refresh токены
     access_token = jwt.encode({
         'user_id': user_id,
-        'exp': datetime.utcnow() + app.config['JWT_ACCESS_TOKEN_EXPIRES'],
+        'exp': datetime.now() + app.config['JWT_ACCESS_TOKEN_EXPIRES'],
         'type': 'access'
     }, app.config['SECRET_KEY'])
 
     refresh_token = jwt.encode({
         'user_id': user_id,
-        'exp': datetime.utcnow() + app.config['JWT_REFRESH_TOKEN_EXPIRES'],
+        'exp': datetime.now() + app.config['JWT_REFRESH_TOKEN_EXPIRES'],
         'type': 'refresh'
     }, app.config['SECRET_KEY'])
 
@@ -773,7 +773,7 @@ def refresh():
         # Создаем новый access токен
         new_access_token = jwt.encode({
             'user_id': user_id,
-            'exp': datetime.utcnow() + app.config['JWT_ACCESS_TOKEN_EXPIRES'],
+            'exp': datetime.now() + app.config['JWT_ACCESS_TOKEN_EXPIRES'],
             'type': 'access'
         }, app.config['SECRET_KEY'])
 

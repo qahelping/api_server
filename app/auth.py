@@ -26,7 +26,7 @@ def get_password_hash(password):
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    to_encode["exp"] = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode["exp"] = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
@@ -42,8 +42,8 @@ def authenticate_user(db: Session, username: str, password: str):
 
 
 def get_current_user(token: str = Depends(oauth2_scheme),
-                     db: Session = Depends(database.get_db),
-                     local_kw: Optional[str] = Query(None)):
+                     local_kw: Optional[str] = Query(None),
+                     db: Session = Depends(database.get_db)):
     credentials_exception = HTTPException(status_code=401, detail="Invalid credentials")
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])

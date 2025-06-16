@@ -53,3 +53,4 @@ urllib3==2.4.0
 Werkzeug==2.3.7
 uvicorn
 python-jose[cryptography]
+watchfiles

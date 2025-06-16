@@ -12,6 +12,7 @@ class LoginInput(BaseModel):
 class UserCreate(BaseModel):
     username: str
     password: str
+    role: Optional[str] = None
 
 
 class UserOut(BaseModel):
@@ -33,8 +34,8 @@ class TaskCreate(BaseModel):
     title: str
     description: str
     priority: str
-    status: str
-    responsible_id: int
+    status: Optional[str] = 'Open'
+    responsible_id: Optional[int] = None
 
 
 class TaskUpdate(BaseModel):
@@ -51,12 +52,12 @@ class TaskOut(BaseModel):
     description: str
     status: str
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
     creator_id: int
-    responsible_id: Optional[int]
+    responsible_id: Optional[int] = None
 
     class Config:
-        orm_mode = True
+        fro = True
 
 
 class AssignResponsibleRequest(BaseModel):

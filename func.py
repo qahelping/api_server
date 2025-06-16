@@ -320,17 +320,15 @@ def delete_avatar(user_id: int, token: str):
 
 # Пример использования
 if __name__ == "__main__":
-    # Регистрация и вход
-    print("Registering user...")
-    register_user("testuser", "testpassword")
+    # register_user("testuser123", "testpassword")
 
     print("Logging in...")
-    token = login_user("testuser", "testpassword")
+    token = login_user("testuser12", "testpassword")
     if not token:
         print("Failed to login")
         exit(1)
-
-    # Работа с задачами
+    #
+    # # Работа с задачами
     print("Creating task...")
     task_data = {
         "title": "Test Task",
@@ -341,28 +339,28 @@ if __name__ == "__main__":
     task = create_task(task_data, token)
     print(f"Created task: {task}")
 
-    print("Getting user tasks...")
-    tasks = get_user_tasks(token)
-    print(f"User tasks: {tasks}")
-
-    # Работа с досками
-    print("Creating board...")
-    board = create_board("Test Board", token)
-    print(f"Created board: {board}")
-
-
-    print("Adding task to board...")
-    result = add_task_to_board(1, 1, token)
-    print(f"Add task to board result: {result}")
-
-    # Работа с аватаром
-    print("Uploading avatar...")
-    avatar_path = "/Users/elenayanushevskaya/QAP/api_server/user_photos/test_photo.jpg"  # Укажите реальный путь к изображению
-    if os.path.exists(avatar_path):
-        avatar_result = upload_avatar(1, avatar_path, token)  # Предполагаем, что user_id=1
-        print(f"Avatar upload result: {avatar_result}")
-
-    # # Удаление аватара
-    print("Deleting avatar...")
-    delete_result = delete_avatar(1, token)  # Предполагаем, что user_id=1
-    print(f"Avatar delete result: {delete_result}")
+    # print("Getting user tasks...")
+    # tasks = get_user_tasks(token)
+    # print(f"User tasks: {tasks}")
+    #
+    # # Работа с досками
+    # print("Creating board...")
+    # board = create_board("Test Board", token)
+    # print(f"Created board: {board}")
+    #
+    #
+    # print("Adding task to board...")
+    # result = add_task_to_board(1, 1, token)
+    # print(f"Add task to board result: {result}")
+    #
+    # # Работа с аватаром
+    # print("Uploading avatar...")
+    # avatar_path = "/Users/elenayanushevskaya/QAP/api_server/user_photos/test_photo.jpg"  # Укажите реальный путь к изображению
+    # if os.path.exists(avatar_path):
+    #     avatar_result = upload_avatar(1, avatar_path, token)  # Предполагаем, что user_id=1
+    #     print(f"Avatar upload result: {avatar_result}")
+    #
+    # # # Удаление аватара
+    # print("Deleting avatar...")
+    # delete_result = delete_avatar(1, token)  # Предполагаем, что user_id=1
+    # print(f"Avatar delete result: {delete_result}")

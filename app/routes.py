@@ -26,24 +26,14 @@ MAX_FILE_SIZE = 5 * 1024 * 1024
 @router.post("/admin/create", response_model=schemas.UserOut)
 def create_admin_user(
     user_data: schemas.UserCreate,
-    current_user: models.User = Depends(auth.get_current_user),
     db: Session = Depends(database.get_db),
 ):
-    if current_user.role != "admin":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Только администратор может создавать других администраторов"
-        )
-
-    existing_user = db.query(models.User).filter(models.User.email == user_data.email).first()
-    if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Пользователь с таким email уже существует"
-        )
+    db_user = auth.get_user(db, user_data.username)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Username already exists")
 
     new_user = models.User(
-        email=user_data.email,
+        username=user_data.username,
         hashed_password=get_password_hash(user_data.password),
         role="admin"
     )
@@ -57,8 +47,16 @@ def create_admin_user(
 def register(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     db_user = auth.get_user(db, user.username)
     if db_user:
-        raise HTTPException(status_code=400, detail="Username already exists")
-    return crud.create_user(db, user)
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Username already exists")
+
+    created_user = crud.create_user(db, user)
+
+    if not created_user:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="User creation failed"
+        )
+    return created_user
 
 
 @router.post("/login", response_model=schemas.Token)
@@ -382,14 +380,14 @@ def get_user_by_id(user_id: int, db: Session = Depends(database.get_db)):
 @router.patch("/users/{user_id}", response_model=schemas.UserOut)
 def update_user(
     user_id: int,
-    user_update: schemas.UserCreate,  # Сделай отдельную схему для обновления
+    user_update: schemas.UserCreate,
     current_user: models.User = Depends(auth.get_current_user),
     db: Session = Depends(database.get_db)
 ):
     if current_user.id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized to update this user")
 
-    updated_user = crud.update_user(db, user_id, user_update.dict(exclude_unset=True))
+    updated_user = crud.update_user(db, user_id, user_update.model_dump(exclude_unset=True))
     if not updated_user:
         raise HTTPException(status_code=400, detail="Update failed")
     return updated_user
@@ -473,8 +471,12 @@ def delete_pdf(task_id: int, db: Session = Depends(database.get_db)):
 
     return JSONResponse(content={"message": "PDF deleted successfully"})
 
+
 @router.put("/tasks/{task_id}/close")
-def close_task(db: Session, task_id: int, user_id: int) -> models.Task:
+def close_task(task_id: int,
+               user_id: int,
+               db: Session = Depends(database.get_db)
+               ) -> schemas.TaskOut:  # Изменили тип возвращаемого значения
     # Получаем задачу
     task = db.query(models.Task).filter(models.Task.id == task_id).first()
     if not task:
@@ -485,13 +487,12 @@ def close_task(db: Session, task_id: int, user_id: int) -> models.Task:
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # Обновляем статус задачи
     task.status = "Done"
-    task.updated_at = datetime.utcnow()
+    task.updated_at = datetime.now()
 
-    # Увеличиваем счетчик закрытых задач у пользователя
     user.closed_tasks_count += 1
 
     db.commit()
     db.refresh(task)
-    return task
+
+    return schemas.TaskOut.model_validate(task)
