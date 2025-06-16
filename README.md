@@ -24,7 +24,12 @@ cd trello-like-api
 
 ```bash
 uvicorn app.main:app --reload --port 8001
+
+docker build -t my-app . --no-cache
+docker run -d -p 8001:8001 --name my-app \-v $(pwd):/app \ app
+
 ```
 
 3. Swagger
    http://127.0.0.1:8001/docs 
+

@@ -36,8 +36,7 @@ def login_with_new_user(service: AppService):
 
 def test_create_task(service, login_with_new_user):
     fake = Faker()
-    task = schemas.TaskCreate(title=fake.user_name(), description=fake.last_name(), priority='Low', status='Open')
+    task = schemas.TaskCreate(title=fake.user_name(), description=fake.last_name(), priority='Low')
     print(service.token)
-    response = service.create_task(task)
-    print(response)
+    return  service.create_task(task)
 

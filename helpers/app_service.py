@@ -23,4 +23,4 @@ class AppService(BaseService):
 
     def create_task(self, task: schemas.TaskCreate):
         url = f"{self.BASE_URL}/tasks"
-        return self.post_2(url, task, self.token)
+        return schemas.TaskOut(**self.post_2(url, task, self.token))
